@@ -79,3 +79,24 @@ describe('externally managed audio configuration', () => {
     expect(open).toHaveBeenCalledWith('https://localhost:47990/config/#external_audio', '_blank', 'noopener')
   })
 })
+
+describe('native macOS audio capture', () => {
+  it('keeps the existing backend by default and preserves a selected alternative', async () => {
+    const { wrapper, config } = mountAudioVideo('macos')
+    expect(config.macos_audio_capture).toBe('coreaudio')
+    expect(wrapper.get('label[for="macos_audio_capture"]').text()).toBe('config.macos_audio_capture')
+    await wrapper.get('#macos_audio_capture').setValue('screencapturekit')
+    expect(config.macos_audio_capture).toBe('screencapturekit')
+    expect(config.stream_audio).toBe('enabled')
+    expect(config.audio_sink).toBe('')
+    await wrapper.get('#macos_audio_capture').setValue('coreaudio')
+    expect(config.macos_audio_capture).toBe('coreaudio')
+    wrapper.unmount()
+  })
+
+  it.each(['windows', 'linux', 'freebsd'])('keeps the native macOS selector hidden on %s', platform => {
+    const { wrapper } = mountAudioVideo(platform)
+    expect(wrapper.find('#macos_audio_capture').exists()).toBe(false)
+    wrapper.unmount()
+  })
+})

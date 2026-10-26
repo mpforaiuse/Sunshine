@@ -829,6 +829,7 @@ namespace config {
     true,  // stream audio
     true,  // install_steam_drivers
     false,  // external_audio
+    "coreaudio",  // macos_audio_capture
   };
 
   /**
@@ -1774,6 +1775,7 @@ namespace config {
     bool_f(vars, "stream_audio", audio.stream);
     bool_f(vars, "install_steam_audio_drivers", audio.install_steam_drivers);
     bool_f(vars, "external_audio", audio.external_audio);
+    string_restricted_f(vars, "macos_audio_capture", audio.macos_capture, {"coreaudio"sv, "screencapturekit"sv});
 
     string_restricted_f(vars, "origin_web_ui_allowed", nvhttp.origin_web_ui_allowed, {"pc"sv, "lan"sv, "wan"sv});
 

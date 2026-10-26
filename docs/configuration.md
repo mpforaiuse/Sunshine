@@ -913,6 +913,28 @@ consent prompt for directory ACLs, so the Web UI shows setup steps for correctin
     </tr>
 </table>
 
+### macos_audio_capture
+
+<table>
+    <tr>
+        <td>Description</td>
+        <td colspan="2">
+            Select the native system-audio backend on macOS when `audio_sink` is empty.
+            A configured `audio_sink` takes precedence over this setting.
+            ScreenCaptureKit supports 48 kHz mono or stereo without a loopback driver or an aggregate audio device.
+            Startup is limited to three seconds, sample waits are limited to 100 milliseconds, and shutdown does not wait for native stop callbacks.
+            Host sound continues playing with ScreenCaptureKit, including when Moonlight requests host muting.
+            Use stereo audio in Moonlight; surround layouts require Core Audio.
+        </td>
+    </tr>
+    <tr><td>Default</td><td colspan="2">coreaudio</td></tr>
+    <tr><td>Example</td><td colspan="2">@code{}
+        macos_audio_capture = screencapturekit
+        @endcode</td></tr>
+    <tr><td rowspan="2">Choices</td><td>coreaudio</td><td>Existing process-tap capture, with host muting and surround support.</td></tr>
+    <tr><td>screencapturekit</td><td>Native stereo capture with asynchronous shutdown and continued host playback.</td></tr>
+</table>
+
 ### install_steam_audio_drivers
 
 <table>

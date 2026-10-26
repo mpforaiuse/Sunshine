@@ -36,10 +36,12 @@ list(APPEND SUNSHINE_EXTERNAL_LIBRARIES
         ${CORE_VIDEO_LIBRARY}
         ${FOUNDATION_LIBRARY}
         ${IOKIT_LIBRARY}
+        ${SCREEN_CAPTURE_KIT_LIBRARY}
         ${USER_NOTIFICATIONS_LIBRARY}
         ${VIDEO_TOOLBOX_LIBRARY})
 
 set(APPLE_PLIST_TEMPLATE "${SUNSHINE_SOURCE_ASSETS_DIR}/macos/build/Info.plist.in")
+set(SUNSHINE_MACOS_DISPLAY_NAME "${CMAKE_PROJECT_NAME}" CACHE STRING "Display name of the macOS application.")
 set(APPLE_PLIST_FILE "${CMAKE_BINARY_DIR}/Info.plist")
 set(APPLE_ENTITLEMENTS_FILE "${SUNSHINE_SOURCE_ASSETS_DIR}/macos/entitlements.plist")
 configure_file("${APPLE_PLIST_TEMPLATE}" "${APPLE_PLIST_FILE}" @ONLY)
@@ -53,6 +55,8 @@ set(PLATFORM_TARGET_FILES
         "${CMAKE_SOURCE_DIR}/src/platform/macos/display.mm"
         "${CMAKE_SOURCE_DIR}/src/platform/macos/input.cpp"
         "${CMAKE_SOURCE_DIR}/src/platform/macos/microphone.mm"
+        "${CMAKE_SOURCE_DIR}/src/platform/macos/sck_audio.h"
+        "${CMAKE_SOURCE_DIR}/src/platform/macos/sck_audio.mm"
         "${CMAKE_SOURCE_DIR}/src/platform/macos/misc.mm"
         "${CMAKE_SOURCE_DIR}/src/platform/macos/misc.h"
         "${CMAKE_SOURCE_DIR}/src/platform/macos/nv12_zero_device.cpp"
@@ -62,3 +66,7 @@ set(PLATFORM_TARGET_FILES
         "${CMAKE_SOURCE_DIR}/third-party/TPCircularBuffer/TPCircularBuffer.h"
         ${APPLE_ENTITLEMENTS_FILE}
         ${APPLE_PLIST_FILE})
+
+# Native completion handlers retain their session objects after the streaming thread exits.
+set_source_files_properties("${CMAKE_SOURCE_DIR}/src/platform/macos/sck_audio.mm"
+        PROPERTIES COMPILE_OPTIONS "-fobjc-arc")

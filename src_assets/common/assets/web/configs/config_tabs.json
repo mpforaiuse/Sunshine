@@ -41,6 +41,7 @@
       "audio_sink": "",
       "virtual_sink": "",
       "stream_audio": "enabled",
+      "macos_audio_capture": "coreaudio",
       "install_steam_audio_drivers": "enabled",
       "external_audio": "disabled",
       "adapter_name": "",

@@ -7,7 +7,7 @@
   <key>CFBundleName</key>
   <string>@CMAKE_PROJECT_NAME@</string>
   <key>CFBundleDisplayName</key>
-  <string>@CMAKE_PROJECT_NAME@</string>
+  <string>@SUNSHINE_MACOS_DISPLAY_NAME@</string>
   <key>CFBundleExecutable</key>
   <string>@CMAKE_PROJECT_NAME@</string>
   <key>CFBundlePackageType</key>

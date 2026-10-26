@@ -7,6 +7,7 @@
 #include "src/logging.h"
 #include "src/platform/common.h"
 #include "src/platform/macos/av_audio.h"
+#include "src/platform/macos/sck_audio.h"
 
 namespace platf {
   using namespace std::literals;
@@ -93,6 +94,13 @@ namespace platf {
      * @return Microphone capture object for the requested audio layout.
      */
     std::unique_ptr<mic_t> microphone(const std::uint8_t *mapping, int channels, std::uint32_t sample_rate, std::uint32_t frame_size, bool continuous_audio, bool host_audio_enabled) override {
+      if (config::audio.sink.empty() && config::audio.macos_capture == "screencapturekit") {
+        if (!host_audio_enabled) {
+          BOOST_LOG(warning) << "ScreenCaptureKit captures system sound while host playback continues; host muting requires the Core Audio backend"sv;
+        }
+        return sck_audio::create(sample_rate, channels);
+      }
+
       auto mic = std::make_unique<av_mic_t>();
       mic->av_audio_capture = [[AVAudio alloc] init];
 

@@ -76,6 +76,16 @@ const config = ref(props.config)
     ></Checkbox>
 
     <PlatformLayout :platform="platform">
+      <template #macos>
+        <div class="mb-3">
+          <label for="macos_audio_capture" class="form-label">{{ $t('config.macos_audio_capture') }}</label>
+          <select id="macos_audio_capture" class="form-select" v-model="config.macos_audio_capture">
+            <option value="coreaudio">{{ $t('config.macos_audio_capture_coreaudio') }}</option>
+            <option value="screencapturekit">{{ $t('config.macos_audio_capture_screencapturekit') }}</option>
+          </select>
+          <div class="form-text">{{ $t('config.macos_audio_capture_desc') }}</div>
+        </div>
+      </template>
       <template #windows>
         <!-- Externally Managed Audio -->
         <Checkbox class="mb-3"

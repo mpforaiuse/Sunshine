@@ -17,6 +17,8 @@
 
 // local includes
 #include "coreaudio_helpers.h"
+#include "sck_audio.h"
+#include "src/config.h"
 #include "src/logging.h"
 #include "src/utility.h"
 
@@ -65,6 +67,9 @@ namespace platf {
   }
 
   bool request_system_audio_permission() {
+    if (config::audio.macos_capture == "screencapturekit") {
+      return sck_audio::create(48000, 2) != nullptr;
+    }
     AVAudio *probe = [[AVAudio alloc] init];
     probe.hostAudioEnabled = YES;
     const bool started = [probe setupSystemTap:48000 frameSize:512 channels:2] == 0;

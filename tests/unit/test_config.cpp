@@ -63,6 +63,13 @@ TEST(ConfigDefaultsTest, UsesAutomaticGamepadSelection) {
   EXPECT_EQ(config::input.gamepad, "auto");
 }
 
+/**
+ * @brief Preserve the existing native audio backend unless an alternative is selected.
+ */
+TEST(ConfigDefaultsTest, PreservesCoreAudioCaptureDefault) {
+  EXPECT_EQ(config::audio.macos_capture, "coreaudio");
+}
+
 TEST(ConfigDefaultsTest, TreatsFp16SdrCapturesAsLinear) {
   EXPECT_FALSE(config::video.fp16_sdr_gamma_encoded);
 }
@@ -206,6 +213,25 @@ TEST_F(ConfigPersistenceTest, AcceptsAllGamepadProfilesAcrossRepeatedConfigurati
     config::apply_config_for_test(std::string {"gamepad = "} + std::string {profile} + "\n");
     EXPECT_EQ(config::input.gamepad, profile);
   }
+}
+
+/**
+ * @brief Accept known native audio backends and retain the selection after invalid input.
+ */
+TEST_F(ConfigPersistenceTest, ParsesMacosAudioBackendAndRejectsUnknownValues) {
+  const auto original = config::audio.macos_capture;
+  const auto restore = util::fail_guard([&] {
+    config::audio.macos_capture = original;
+  });
+  const auto apps_file = config_file().parent_path() / "sunshine_test_config_apps.json";
+  ASSERT_EQ(file_handler::write_file(apps_file.string().c_str(), "{}"), 0);
+  config::stream.file_apps = apps_file.string();
+  config::apply_config_for_test("macos_audio_capture = screencapturekit\n");
+  EXPECT_EQ(config::audio.macos_capture, "screencapturekit");
+  config::apply_config_for_test("macos_audio_capture = unknown\n");
+  EXPECT_EQ(config::audio.macos_capture, "screencapturekit");
+  config::apply_config_for_test("macos_audio_capture = coreaudio\n");
+  EXPECT_EQ(config::audio.macos_capture, "coreaudio");
 }
 
 TEST_F(ConfigPersistenceTest, ParsesFp16SdrGammaEncodedOption) {

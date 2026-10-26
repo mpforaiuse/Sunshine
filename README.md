@@ -1,3 +1,6 @@
+This fork adds a selectable native macOS audio backend for investigating disconnect hangs while retaining streamed sound.
+See [native audio reliability](NATIVE_AUDIO.md) for the change, compatibility limits, and validation status.
+
 <div align="center">
   <img
     src="sunshine.svg"
