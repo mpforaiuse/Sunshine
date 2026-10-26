@@ -38,7 +38,7 @@ A custom Audio Sink continues to select the existing explicit-device path.
 
 ## Validation
 
-The first local build passed 37 targeted native tests and 216 web tests.
+The local build passed 44 targeted native tests and 216 web tests.
 The native tests cover real Core Media float PCM packets, planar channel ordering, incompatible formats, bounded buffering, cancellation, and late callbacks.
 The settings control was inspected in a headless browser using the existing application styles.
 These checks do not establish successful live audio capture or playback on a Moonlight client.
@@ -61,10 +61,13 @@ BRANCH=master BUILD_VERSION=2026.1026.1 cmake -S . -B cmake-build-native-audio -
   -DSUNSHINE_MACOS_DISPLAY_NAME="Sunshine Native Audio"
 cmake --build cmake-build-native-audio -j 6
 ./cmake-build-native-audio/tests/test_sunshine \
-  --gtest_filter='ScreenCaptureAudio*:ConfigPersistenceTest.*:ConfigDefaultsTest.*:ConfigConsistencyTest.*:MacosAudioPermissionTest.*'
+  --gtest_filter='ScreenCaptureAudio*:ConfigPersistenceTest.*:ConfigDefaultsTest.*:ConfigConsistencyTest.*:MacosAudioPermissionTest.*:MacosAppDataTest.*:MacosPermissionsTest.*'
 npm test
 ```
 
-The development app requires its own macOS capture permission and should be tested with a separate configuration directory.
+The development app requires its own macOS capture permission.
+Custom bundle identities automatically use `~/Library/Application Support/<bundle identifier>` for settings, including when reopened from Finder.
+The build above uses `~/Library/Application Support/dev.mpforaiuse.app.SunshineNativeAudio`.
+The upstream bundle identity continues to use `~/.config/sunshine`.
 Keep pairing certificates and credentials local, outside the repository.
 The original Sunshine source and this fork remain under the repository's GPL-3.0-only license.

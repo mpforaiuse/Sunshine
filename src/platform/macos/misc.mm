@@ -346,13 +346,20 @@ namespace platf {
     return std::make_unique<deinit_t>();
   }
 
+  fs::path macos_appdata(const fs::path &home, std::string_view bundle_identifier) {
+    if (bundle_identifier == "dev.lizardbyte.app.Sunshine"sv) {
+      return home / ".config/sunshine"sv;
+    }
+    return home / "Library/Application Support"sv / bundle_identifier;
+  }
+
   fs::path appdata() {
     const char *homedir;
     if ((homedir = getenv("HOME")) == nullptr) {
       homedir = getpwuid(geteuid())->pw_dir;
     }
 
-    return fs::path {homedir} / ".config/sunshine"sv;
+    return macos_appdata(fs::path {homedir}, PROJECT_FQDN);
   }
 
   /**

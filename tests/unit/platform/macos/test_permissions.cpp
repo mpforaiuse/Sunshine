@@ -10,6 +10,15 @@
   // local includes
   #include "src/platform/macos/misc.h"
 
+TEST(MacosAppDataTest, UpstreamBundleKeepsExistingSettings) {
+  EXPECT_EQ(platf::macos_appdata("/example/home", "dev.lizardbyte.app.Sunshine"), std::filesystem::path("/example/home/.config/sunshine"));
+}
+
+TEST(MacosAppDataTest, CustomBundlesHaveSeparateSettings) {
+  EXPECT_EQ(platf::macos_appdata("/example/home", "dev.mpforaiuse.app.SunshineNativeAudio"), std::filesystem::path("/example/home/Library/Application Support/dev.mpforaiuse.app.SunshineNativeAudio"));
+  EXPECT_NE(platf::macos_appdata("/example/home", "dev.mpforaiuse.app.SunshineNativeAudio"), platf::macos_appdata("/example/home", "dev.example.OtherSunshine"));
+}
+
 TEST(MacosPermissionsTest, RequiredPermissionsIgnoreOptionalAndOnUseStatuses) {
   using platf::permission_status_t;
   EXPECT_TRUE(platf::required_permissions_granted({

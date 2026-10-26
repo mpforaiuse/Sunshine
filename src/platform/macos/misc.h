@@ -5,12 +5,22 @@
 #pragma once
 
 // standard includes
+#include <filesystem>
+#include <string_view>
 #include <vector>
 
 // local includes
 #include "src/platform/permissions.h"
 
 namespace platf {
+  /**
+   * @brief Keep custom app bundles separate while preserving the upstream configuration location.
+   * @param home User home directory.
+   * @param bundle_identifier Application's reverse-DNS bundle identifier.
+   * @return Configuration directory for the selected application identity.
+   */
+  std::filesystem::path macos_appdata(const std::filesystem::path &home, std::string_view bundle_identifier);
+
   /**
    * @brief Action to take when a macOS privacy permission is unavailable.
    */
